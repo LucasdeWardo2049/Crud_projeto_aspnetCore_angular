@@ -1,0 +1,62 @@
+<section class="page-header">
+  <div>
+    <h2>Schedules</h2>
+  </div>
+
+  <a routerLink="/schedules/new" class="button">New Schedule</a>
+</section>
+
+@if (loading) {
+  <div class="message">Carregando...</div>
+}
+
+@if (errorMessage) {
+  <div class="error">{{ errorMessage }}</div>
+}
+
+@if (!loading && schedules.length === 0) {
+  <div class="message">Nenhuma escala cadastrada.</div>
+}
+
+@if (!loading && schedules.length > 0) {
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Employee</th>
+          <th>Registration</th>
+          <th>Department</th>
+          <th>Shift</th>
+          <th>Date</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (schedule of schedules; track schedule.id) {
+          <tr>
+            <td>{{ schedule.employeeName }}</td>
+            <td>{{ schedule.employeeRegistration }}</td>
+            <td>{{ schedule.department }}</td>
+            <td>{{ schedule.shiftName }}</td>
+            <td>{{ schedule.workDate }}</td>
+            <td>{{ schedule.startTime }}</td>
+            <td>{{ schedule.endTime }}</td>
+            <td>
+              <span class="status">{{ schedule.status }}</span>
+            </td>
+            <td>
+              <div class="action-buttons">
+                <a [routerLink]="['/schedules', schedule.id, 'edit']">Edit</a>
+                <button type="button" (click)="deleteSchedule(schedule)">Delete</button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

@@ -1,0 +1,100 @@
+<section class="page-header">
+  <div>
+    <h2>{{ isEditMode ? 'Edit Schedule' : 'New Schedule' }}</h2>
+  </div>
+
+  <a routerLink="/schedules">Back</a>
+</section>
+
+@if (loading) {
+  <div class="message">Processando...</div>
+}
+
+@if (errorMessage) {
+  <div class="error">{{ errorMessage }}</div>
+}
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="form">
+  <div class="form-grid">
+    <div class="form-row">
+      <label for="employeeName">Employee Name</label>
+      <input id="employeeName" type="text" formControlName="employeeName" />
+      @if (isInvalid('employeeName')) {
+        <small>employeeName e obrigatorio.</small>
+      }
+    </div>
+
+    <div class="form-row">
+      <label for="employeeRegistration">Employee Registration</label>
+      <input id="employeeRegistration" type="text" formControlName="employeeRegistration" />
+      @if (isInvalid('employeeRegistration')) {
+        <small>employeeRegistration e obrigatorio.</small>
+      }
+    </div>
+
+    <div class="form-row">
+      <label for="department">Department</label>
+      <input id="department" type="text" formControlName="department" />
+      @if (isInvalid('department')) {
+        <small>department e obrigatorio.</small>
+      }
+    </div>
+
+    <div class="form-row">
+      <label for="shiftName">Shift Name</label>
+      <input id="shiftName" type="text" formControlName="shiftName" />
+      @if (isInvalid('shiftName')) {
+        <small>shiftName e obrigatorio.</small>
+      }
+    </div>
+
+    <div class="form-row">
+      <label for="workDate">Work Date</label>
+      <input id="workDate" type="date" formControlName="workDate" />
+      @if (isInvalid('workDate')) {
+        <small>workDate e obrigatorio.</small>
+      }
+    </div>
+
+    <div class="form-row">
+      <label for="status">Status</label>
+      <select id="status" formControlName="status">
+        @for (status of statusOptions; track status) {
+          <option [value]="status">{{ status }}</option>
+        }
+      </select>
+      @if (isInvalid('status')) {
+        <small>status e obrigatorio.</small>
+      }
+    </div>
+
+    <div class="form-row">
+      <label for="startTime">Start Time</label>
+      <input id="startTime" type="time" formControlName="startTime" />
+      @if (isInvalid('startTime')) {
+        <small>startTime e obrigatorio.</small>
+      }
+    </div>
+
+    <div class="form-row">
+      <label for="endTime">End Time</label>
+      <input id="endTime" type="time" formControlName="endTime" />
+      @if (isInvalid('endTime')) {
+        <small>endTime e obrigatorio.</small>
+      }
+    </div>
+
+    <div class="form-row form-row-full">
+      <label for="notes">Notes</label>
+      <textarea id="notes" rows="4" formControlName="notes"></textarea>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" [disabled]="loading">
+      {{ isEditMode ? 'Update' : 'Create' }}
+    </button>
+
+    <a routerLink="/schedules">Cancel</a>
+  </div>
+</form>

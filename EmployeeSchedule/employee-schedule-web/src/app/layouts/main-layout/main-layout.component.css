@@ -1,0 +1,51 @@
+.shell-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 72px;
+  padding: 0 24px;
+  color: #fff;
+  background: #172033;
+  border-bottom: 3px solid #2f9e8f;
+}
+
+.shell-header h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.shell-header nav {
+  display: flex;
+  gap: 8px;
+}
+
+.shell-header a {
+  padding: 9px 12px;
+  border-radius: 6px;
+  color: #eef3f7;
+  text-decoration: none;
+}
+
+.shell-header a.active,
+.shell-header a:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.shell-content {
+  width: min(1180px, calc(100% - 32px));
+  margin: 28px auto;
+}
+
+@media (max-width: 640px) {
+  .shell-header {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 16px;
+  }
+
+  .shell-header nav {
+    flex-wrap: wrap;
+  }
+}
