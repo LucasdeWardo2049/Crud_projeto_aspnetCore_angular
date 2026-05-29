@@ -1,0 +1,24 @@
+# Markdown notes and generated READMEs
+*.md
+
+# .NET
+bin/
+obj/
+*.user
+
+# Node / Angular
+node_modules/
+dist/
+.angular/
+
+# IDEs and editors
+.vscode/
+.vs/
+
+# Local configuration and secrets
+.env*
+**/appsettings.Development.json
+**/appsettings.Local.json
+
+# Local logs
+logs/
