@@ -12,7 +12,7 @@ import {
 @Injectable({
   providedIn: 'root'
 })
-export class ScheduleService {
+export class ScheduleService { 
   private readonly http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/schedules`;
 

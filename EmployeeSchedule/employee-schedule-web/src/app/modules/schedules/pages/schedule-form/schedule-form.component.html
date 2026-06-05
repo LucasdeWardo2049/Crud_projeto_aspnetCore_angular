@@ -15,86 +15,180 @@
 }
 
 <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form">
-  <div class="form-grid">
-    <div class="form-row">
-      <label for="employeeName">Employee Name</label>
-      <input id="employeeName" type="text" formControlName="employeeName" />
-      @if (isInvalid('employeeName')) {
-        <small>employeeName e obrigatorio.</small>
-      }
-    </div>
+  <mat-accordion class="schedule-accordion" multi>
+    <mat-expansion-panel class="form-panel employee-panel" [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Funcionario</mat-panel-title>
+        <mat-panel-description>
+          {{ usesNewEmployee ? 'Cadastrar novo' : 'Selecionar existente' }}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
 
-    <div class="form-row">
-      <label for="employeeRegistration">Employee Registration</label>
-      <input id="employeeRegistration" type="text" formControlName="employeeRegistration" />
-      @if (isInvalid('employeeRegistration')) {
-        <small>employeeRegistration e obrigatorio.</small>
-      }
-    </div>
+      <mat-radio-group class="employee-mode" formControlName="employeeMode">
+        <mat-radio-button value="existing">Selecionar existente</mat-radio-button>
+        <mat-radio-button value="new">Cadastrar novo funcionario</mat-radio-button>
+      </mat-radio-group>
 
-    <div class="form-row">
-      <label for="department">Department</label>
-      <input id="department" type="text" formControlName="department" />
-      @if (isInvalid('department')) {
-        <small>department e obrigatorio.</small>
+      @if (!usesNewEmployee) {
+        <mat-form-field appearance="outline" class="full-field">
+          <mat-label>Employee</mat-label>
+          <mat-select formControlName="employeeId">
+            <mat-option [value]="0">Selecione...</mat-option>
+            @for (employee of employees; track employee.id) {
+              <mat-option [value]="employee.id">
+                {{ employee.name }} - {{ employee.registration }} - {{ employee.department }}
+              </mat-option>
+            }
+          </mat-select>
+          @if (isExistingEmployeeInvalid()) {
+            <mat-error>Selecione um funcionario.</mat-error>
+          }
+        </mat-form-field>
       }
-    </div>
 
-    <div class="form-row">
-      <label for="shiftName">Shift Name</label>
-      <input id="shiftName" type="text" formControlName="shiftName" />
-      @if (isInvalid('shiftName')) {
-        <small>shiftName e obrigatorio.</small>
+      @if (usesNewEmployee) {
+        <div class="new-employee-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Nome do funcionario</mat-label>
+            <input matInput type="text" formControlName="newEmployeeName" />
+            @if (isNewEmployeeFieldInvalid('newEmployeeName')) {
+              <mat-error>Nome e obrigatorio.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Matricula</mat-label>
+            <input matInput type="text" formControlName="newEmployeeRegistration" />
+            @if (isNewEmployeeFieldInvalid('newEmployeeRegistration')) {
+              <mat-error>Matricula e obrigatoria.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Departamento</mat-label>
+            <input matInput type="text" formControlName="newEmployeeDepartment" />
+            @if (isNewEmployeeFieldInvalid('newEmployeeDepartment')) {
+              <mat-error>Departamento e obrigatorio.</mat-error>
+            }
+          </mat-form-field>
+        </div>
       }
-    </div>
 
-    <div class="form-row">
-      <label for="workDate">Work Date</label>
-      <input id="workDate" type="date" formControlName="workDate" />
-      @if (isInvalid('workDate')) {
-        <small>workDate e obrigatorio.</small>
+      @if (selectedEmployee) {
+        <section class="employee-summary">
+          <div>
+            <span>Funcionario selecionado</span>
+            <h3>{{ selectedEmployee.name }}</h3>
+          </div>
+
+          <dl>
+            <div>
+              <dt>Matricula</dt>
+              <dd>{{ selectedEmployee.registration }}</dd>
+            </div>
+
+            <div>
+              <dt>Departamento</dt>
+              <dd>{{ selectedEmployee.department }}</dd>
+            </div>
+
+            <div>
+              <dt>Tasks atuais</dt>
+              <dd>{{ selectedEmployeeTaskCount }}</dd>
+            </div>
+
+            <div>
+              <dt>Escalas futuras</dt>
+              <dd>{{ selectedEmployeeFutureScheduleCount }}</dd>
+            </div>
+          </dl>
+        </section>
       }
-    </div>
+    </mat-expansion-panel>
 
-    <div class="form-row">
-      <label for="status">Status</label>
-      <select id="status" formControlName="status">
-        @for (status of statusOptions; track status) {
-          <option [value]="status">{{ status }}</option>
-        }
-      </select>
-      @if (isInvalid('status')) {
-        <small>status e obrigatorio.</small>
-      }
-    </div>
+    <mat-expansion-panel class="form-panel schedule-panel" [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Dados da escala</mat-panel-title>
+        <mat-panel-description>Horario, data e status</mat-panel-description>
+      </mat-expansion-panel-header>
 
-    <div class="form-row">
-      <label for="startTime">Start Time</label>
-      <input id="startTime" type="time" formControlName="startTime" />
-      @if (isInvalid('startTime')) {
-        <small>startTime e obrigatorio.</small>
-      }
-    </div>
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Shift Name</mat-label>
+          <input matInput type="text" formControlName="shiftName" />
+          @if (isInvalid('shiftName')) {
+            <mat-error>shiftName e obrigatorio.</mat-error>
+          }
+        </mat-form-field>
 
-    <div class="form-row">
-      <label for="endTime">End Time</label>
-      <input id="endTime" type="time" formControlName="endTime" />
-      @if (isInvalid('endTime')) {
-        <small>endTime e obrigatorio.</small>
-      }
-    </div>
+        <mat-form-field appearance="outline">
+          <mat-label>Work Date</mat-label>
+          <input matInput type="date" formControlName="workDate" />
+          @if (isInvalid('workDate')) {
+            <mat-error>workDate e obrigatorio.</mat-error>
+          }
+        </mat-form-field>
 
-    <div class="form-row form-row-full">
-      <label for="notes">Notes</label>
-      <textarea id="notes" rows="4" formControlName="notes"></textarea>
-    </div>
-  </div>
+        <mat-form-field appearance="outline">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status">
+            @for (status of statusOptions; track status) {
+              <mat-option [value]="status">{{ status }}</mat-option>
+            }
+          </mat-select>
+          @if (isInvalid('status')) {
+            <mat-error>status e obrigatorio.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Start Time</mat-label>
+          <input matInput type="time" formControlName="startTime" />
+          @if (isInvalid('startTime')) {
+            <mat-error>startTime e obrigatorio.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>End Time</mat-label>
+          <input matInput type="time" formControlName="endTime" />
+          @if (isInvalid('endTime')) {
+            <mat-error>endTime e obrigatorio.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-field">
+          <mat-label>Notes</mat-label>
+          <textarea matInput rows="4" formControlName="notes"></textarea>
+        </mat-form-field>
+      </div>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel class="form-panel task-panel">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Task do funcionario</mat-panel-title>
+        <mat-panel-description>Opcional</mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <div class="task-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Titulo da task</mat-label>
+          <input matInput type="text" formControlName="taskTitle" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-field">
+          <mat-label>Descricao da task</mat-label>
+          <textarea matInput rows="3" formControlName="taskDescription"></textarea>
+        </mat-form-field>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
 
   <div class="form-actions">
-    <button type="submit" [disabled]="loading">
+    <button mat-flat-button type="submit" [disabled]="loading">
       {{ isEditMode ? 'Update' : 'Create' }}
     </button>
 
-    <a routerLink="/schedules">Cancel</a>
+    <a mat-stroked-button routerLink="/schedules">Cancel</a>
   </div>
 </form>

@@ -1,14 +1,14 @@
+using EmployeeSchedule.Api.Modules.EmployeeModule.Entity;
+
 namespace EmployeeSchedule.Api.Modules.ScheduleModule.Entity;
 
 public class Schedule
 {
     public int Id { get; set; }
 
-    public string EmployeeName { get; set; } = string.Empty;
+    public int EmployeeId { get; set; }
 
-    public string EmployeeRegistration { get; set; } = string.Empty;
-
-    public string Department { get; set; } = string.Empty;
+    public Employee? Employee { get; set; }
 
     public string ShiftName { get; set; } = string.Empty;
 

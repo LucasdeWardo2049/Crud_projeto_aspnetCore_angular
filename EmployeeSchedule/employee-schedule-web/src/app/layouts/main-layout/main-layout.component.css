@@ -5,13 +5,14 @@
   gap: 16px;
   min-height: 72px;
   padding: 0 24px;
-  color: #fff;
-  background: #172033;
-  border-bottom: 3px solid #2f9e8f;
+  color: var(--dx-text);
+  background: var(--dx-base-2-dark);
+  border-bottom: 3px solid var(--dx-primary-600);
 }
 
 .shell-header h1 {
   margin: 0;
+  color: var(--dx-text);
   font-size: 22px;
   font-weight: 700;
 }
@@ -24,13 +25,14 @@
 .shell-header a {
   padding: 9px 12px;
   border-radius: 6px;
-  color: #eef3f7;
+  color: var(--dx-gray-300);
   text-decoration: none;
 }
 
 .shell-header a.active,
 .shell-header a:hover {
-  background: rgba(255, 255, 255, 0.14);
+  color: var(--dx-text);
+  background: var(--dx-primary-700);
 }
 
 .shell-content {

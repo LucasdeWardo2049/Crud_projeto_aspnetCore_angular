@@ -1,4 +1,5 @@
 using System.Globalization;
+using EmployeeSchedule.Api.Modules.EmployeeModule.Repository.Contract;
 using EmployeeSchedule.Api.Modules.ScheduleModule.Dtos;
 using EmployeeSchedule.Api.Modules.ScheduleModule.Entity;
 using EmployeeSchedule.Api.Modules.ScheduleModule.Repository.Contract;
@@ -9,10 +10,14 @@ namespace EmployeeSchedule.Api.Modules.ScheduleModule.Services.Implementation;
 public class ScheduleService : IScheduleService
 {
     private readonly IScheduleRepository _scheduleRepository;
+    private readonly IEmployeeRepository _employeeRepository;
 
-    public ScheduleService(IScheduleRepository scheduleRepository)
+    public ScheduleService(
+        IScheduleRepository scheduleRepository,
+        IEmployeeRepository employeeRepository)
     {
         _scheduleRepository = scheduleRepository;
+        _employeeRepository = employeeRepository;
     }
 
     public async Task<List<ScheduleResponseDto>> GetAllAsync()
@@ -34,9 +39,6 @@ public class ScheduleService : IScheduleService
     public async Task<ScheduleResponseDto> CreateAsync(CreateScheduleDto dto)
     {
         var parsedData = ValidateAndParse(
-            dto.EmployeeName,
-            dto.EmployeeRegistration,
-            dto.Department,
             dto.ShiftName,
             dto.StartTime,
             dto.EndTime,
@@ -44,11 +46,19 @@ public class ScheduleService : IScheduleService
             dto.Status
         );
 
+        var employee = await _employeeRepository.GetByIdAsync(dto.EmployeeId);
+
+        if (employee is null)
+        {
+            throw new ArgumentException("employeeId invalido.");
+        }
+
+        await EnsureEmployeeHasNoScheduleOnDateAsync(dto.EmployeeId, parsedData.WorkDate);
+
         var schedule = new Schedule
         {
-            EmployeeName = dto.EmployeeName.Trim(),
-            EmployeeRegistration = dto.EmployeeRegistration.Trim(),
-            Department = dto.Department.Trim(),
+            EmployeeId = dto.EmployeeId,
+            Employee = employee,
             ShiftName = dto.ShiftName.Trim(),
             StartTime = parsedData.StartTime,
             EndTime = parsedData.EndTime,
@@ -74,9 +84,6 @@ public class ScheduleService : IScheduleService
         }
 
         var parsedData = ValidateAndParse(
-            dto.EmployeeName,
-            dto.EmployeeRegistration,
-            dto.Department,
             dto.ShiftName,
             dto.StartTime,
             dto.EndTime,
@@ -84,9 +91,17 @@ public class ScheduleService : IScheduleService
             dto.Status
         );
 
-        existingSchedule.EmployeeName = dto.EmployeeName.Trim();
-        existingSchedule.EmployeeRegistration = dto.EmployeeRegistration.Trim();
-        existingSchedule.Department = dto.Department.Trim();
+        var employee = await _employeeRepository.GetByIdAsync(dto.EmployeeId);
+
+        if (employee is null)
+        {
+            throw new ArgumentException("employeeId invalido.");
+        }
+
+        await EnsureEmployeeHasNoScheduleOnDateAsync(dto.EmployeeId, parsedData.WorkDate, id);
+
+        existingSchedule.EmployeeId = dto.EmployeeId;
+        existingSchedule.Employee = employee;
         existingSchedule.ShiftName = dto.ShiftName.Trim();
         existingSchedule.StartTime = parsedData.StartTime;
         existingSchedule.EndTime = parsedData.EndTime;
@@ -115,18 +130,12 @@ public class ScheduleService : IScheduleService
     }
 
     private static (TimeOnly StartTime, TimeOnly EndTime, DateOnly WorkDate, ScheduleStatus Status) ValidateAndParse(
-        string employeeName,
-        string employeeRegistration,
-        string department,
         string shiftName,
         string startTimeValue,
         string endTimeValue,
         string workDateValue,
         ScheduleStatus? status)
     {
-        EnsureRequired(employeeName, "employeeName");
-        EnsureRequired(employeeRegistration, "employeeRegistration");
-        EnsureRequired(department, "department");
         EnsureRequired(shiftName, "shiftName");
         EnsureRequired(startTimeValue, "startTime");
         EnsureRequired(endTimeValue, "endTime");
@@ -173,14 +182,33 @@ public class ScheduleService : IScheduleService
         return string.IsNullOrWhiteSpace(value) ? null : value.Trim();
     }
 
+    private async Task EnsureEmployeeHasNoScheduleOnDateAsync(
+        int employeeId,
+        DateOnly workDate,
+        int? ignoredScheduleId = null)
+    {
+        var employeeHasScheduleOnDate = await _scheduleRepository.EmployeeHasScheduleOnDateAsync(
+            employeeId,
+            workDate,
+            ignoredScheduleId);
+
+        if (employeeHasScheduleOnDate)
+        {
+            throw new ArgumentException("O mesmo funcionario nao pode ter duas escalas na mesma data.");
+        }
+    }
+
     private static ScheduleResponseDto MapToResponse(Schedule schedule)
     {
+        var employee = schedule.Employee;
+
         return new ScheduleResponseDto
         {
             Id = schedule.Id,
-            EmployeeName = schedule.EmployeeName,
-            EmployeeRegistration = schedule.EmployeeRegistration,
-            Department = schedule.Department,
+            EmployeeId = schedule.EmployeeId,
+            EmployeeName = employee?.Name ?? string.Empty,
+            EmployeeRegistration = employee?.Registration ?? string.Empty,
+            Department = employee?.Department ?? string.Empty,
             ShiftName = schedule.ShiftName,
             StartTime = schedule.StartTime.ToString("HH:mm:ss", CultureInfo.InvariantCulture),
             EndTime = schedule.EndTime.ToString("HH:mm:ss", CultureInfo.InvariantCulture),

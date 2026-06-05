@@ -6,9 +6,9 @@ public static class CorsConfig
 
     public static IServiceCollection AddApiCors(this IServiceCollection services, IConfiguration configuration)
     {
-        var allowedOrigins = configuration
-            .GetSection("Frontend:AllowedOrigins")
-            .Get<string[]>() ?? ["http://localhost:4200"];
+        var allowedOrigins = configuration // lê as origens permitidas do arquivo de configuração, ou usa um valor padrão se não estiver configurado
+            .GetSection("Frontend:AllowedOrigins") 
+            .Get<string[]>() ?? ["http://localhost:4200"]; // valor padrão para desenvolvimento local com Angular CLI
 
         services.AddCors(options =>
         {
