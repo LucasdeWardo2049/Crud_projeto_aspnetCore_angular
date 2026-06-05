@@ -17,7 +17,7 @@ public class ScheduleController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<ScheduleResponseDto>>> GetAll()
+    public async Task<ActionResult<List<ScheduleResponseDto>>> GetAll() // endpoint para obter todos os agendamentos
     {
         var schedules = await _scheduleService.GetAllAsync();
 
@@ -25,7 +25,7 @@ public class ScheduleController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<ScheduleResponseDto>> GetById(int id)
+    public async Task<ActionResult<ScheduleResponseDto>> GetById(int id) // endpoint para obter um agendamento por ID
     {
         var schedule = await _scheduleService.GetByIdAsync(id);
 
@@ -38,7 +38,7 @@ public class ScheduleController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<ScheduleResponseDto>> Create([FromBody] CreateScheduleDto dto)
+    public async Task<ActionResult<ScheduleResponseDto>> Create([FromBody] CreateScheduleDto dto) // endpoint para criar um novo agendamento
     {
         try
         {
@@ -57,7 +57,8 @@ public class ScheduleController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    public async Task<ActionResult<ScheduleResponseDto>> Update(int id, [FromBody] UpdateScheduleDto dto)
+    public async Task<ActionResult<ScheduleResponseDto>> Update(int id, [FromBody] UpdateScheduleDto dto) // endpoint para atualizar um agendamento existente
+
     {
         try
         {
@@ -77,7 +78,7 @@ public class ScheduleController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete(int id) // endpoint para excluir um agendamento por ID
     {
         var deleted = await _scheduleService.DeleteAsync(id);
 

@@ -5,17 +5,8 @@ namespace EmployeeSchedule.Api.Modules.ScheduleModule.Dtos;
 
 public class CreateScheduleDto
 {
-    [Required]
-    [MaxLength(150)]
-    public string EmployeeName { get; set; } = string.Empty;
 
-    [Required]
-    [MaxLength(50)]
-    public string EmployeeRegistration { get; set; } = string.Empty;
-
-    [Required]
-    [MaxLength(100)]
-    public string Department { get; set; } = string.Empty;
+    public int EmployeeId { get; set; }
 
     [Required]
     [MaxLength(100)]

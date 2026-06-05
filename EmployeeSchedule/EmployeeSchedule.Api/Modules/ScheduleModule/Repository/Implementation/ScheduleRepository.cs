@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeSchedule.Api.Modules.ScheduleModule.Repository.Implementation;
 
-public class ScheduleRepository : IScheduleRepository
+public class ScheduleRepository : IScheduleRepository // implementação do repositório de agendamento usando Entity Framework Core
 {
     private readonly AppDbContext _context;
 
@@ -18,6 +18,7 @@ public class ScheduleRepository : IScheduleRepository
     {
         return await _context.Schedules
             .AsNoTracking()
+            .Include(schedule => schedule.Employee)
             .OrderBy(schedule => schedule.WorkDate)
             .ThenBy(schedule => schedule.StartTime)
             .ToListAsync();
@@ -27,13 +28,30 @@ public class ScheduleRepository : IScheduleRepository
     {
         return await _context.Schedules
             .AsNoTracking()
+            .Include(schedule => schedule.Employee)
             .FirstOrDefaultAsync(schedule => schedule.Id == id);
     }
 
     public async Task<Schedule?> GetTrackedByIdAsync(int id)
     {
         return await _context.Schedules
+            .Include(schedule => schedule.Employee)
             .FirstOrDefaultAsync(schedule => schedule.Id == id);
+    }
+
+    public async Task<bool> EmployeeHasScheduleOnDateAsync(int employeeId, DateOnly workDate, int? ignoredScheduleId = null)
+    {
+        var query = _context.Schedules
+            .Where(schedule =>
+                schedule.EmployeeId == employeeId &&
+                schedule.WorkDate == workDate);
+
+        if (ignoredScheduleId is not null)
+        {
+            query = query.Where(schedule => schedule.Id != ignoredScheduleId.Value);
+        }
+
+        return await query.AnyAsync();
     }
 
     public async Task<Schedule> CreateAsync(Schedule schedule)

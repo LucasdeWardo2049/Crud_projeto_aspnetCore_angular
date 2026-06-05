@@ -1,13 +1,24 @@
+:host {
+  display: grid;
+  gap: 16px;
+  padding: 20px;
+  color: var(--dx-text);
+  background: var(--dx-base-2-dark);
+  border: 1px solid var(--dx-border);
+  border-radius: 8px;
+}
+
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 16px;
-  margin-bottom: 18px;
+  margin-bottom: 0;
 }
 
 .page-header h2 {
   margin: 0;
+  color: var(--dx-text);
   font-size: 24px;
 }
 
@@ -19,23 +30,32 @@
   justify-content: center;
   min-height: 36px;
   padding: 0 12px;
-  border: 1px solid #c9d1db;
+  border: 1px solid var(--dx-border);
   border-radius: 6px;
-  color: #172033;
-  background: #fff;
+  color: var(--dx-text);
+  background: var(--dx-surface-raised);
   text-decoration: none;
 }
 
 .button {
-  color: #fff;
-  background: #2f6fed;
-  border-color: #2f6fed;
+  color: var(--dx-text);
+  background: var(--dx-primary-500);
+  border-color: var(--dx-primary-200);
+}
+
+.button:hover,
+.action-buttons a:hover,
+.action-buttons button:hover {
+  color: var(--dx-text);
+  background: var(--dx-primary-700);
+  border-color: var(--dx-primary-500);
 }
 
 .table-wrap {
   overflow-x: auto;
-  background: #fff;
-  border: 1px solid #d9dee7;
+  color: var(--dx-text);
+  background: var(--dx-surface);
+  border: 1px solid var(--dx-border);
   border-radius: 8px;
 }
 
@@ -48,15 +68,19 @@
 .table th,
 .table td {
   padding: 12px;
-  border-bottom: 1px solid #e6eaf0;
+  border-bottom: 1px solid var(--dx-gray-700);
   text-align: left;
   vertical-align: middle;
 }
 
 .table th {
-  color: #526070;
-  background: #f9fafb;
+  color: var(--dx-text);
+  background: var(--dx-surface-raised);
   font-size: 13px;
+}
+
+.table tr:hover td {
+  background: var(--dx-gray-800);
 }
 
 .action-buttons {
@@ -65,7 +89,7 @@
 }
 
 .action-buttons button {
-  color: #a62020;
+  color: var(--dx-text-muted);
 }
 
 .status {
@@ -74,8 +98,8 @@
   min-height: 28px;
   padding: 0 9px;
   border-radius: 999px;
-  color: #24594f;
-  background: #e5f5f2;
+  color: var(--dx-text);
+  background: var(--dx-primary-600);
   font-size: 13px;
   font-weight: 700;
 }
@@ -83,12 +107,14 @@
 .message,
 .error {
   padding: 14px;
-  background: #fff;
-  border: 1px solid #d9dee7;
+  color: var(--dx-text);
+  background: var(--dx-surface-raised);
+  border: 1px solid var(--dx-border);
   border-radius: 8px;
 }
 
 .error {
-  color: #8f1d1d;
-  border-color: #e4abab;
+  color: var(--dx-text);
+  background: var(--dx-primary-800);
+  border-color: var(--dx-primary-200);
 }

@@ -1,12 +1,44 @@
+@import '@angular/material/prebuilt-themes/azure-blue.css';
+
 * {
   box-sizing: border-box;
 }
 
+:root {
+  --dx-page-bg: #383838;
+  --dx-page-text: #ffffff;
+  --dx-base-1: #4a4a4d;
+  --dx-base-1-dark: #363638;
+  --dx-base-2: #434346;
+  --dx-base-2-dark: #363638;
+  --dx-gray-200: #d4d4d5;
+  --dx-gray-300: #c0c0c1;
+  --dx-gray-400: #afafaf;
+  --dx-gray-500: #8c8c8f;
+  --dx-gray-600: #68686a;
+  --dx-gray-700: #4a4a4d;
+  --dx-gray-800: #363638;
+  --dx-primary-50: #f5f5f5;
+  --dx-primary-100: #fca5a5;
+  --dx-primary-200: #ef4444;
+  --dx-primary-500: #c1121f;
+  --dx-primary-600: #a4161a;
+  --dx-primary-700: #660708;
+  --dx-primary-800: #3a0505;
+  --dx-text: #f4f4f5;
+  --dx-text-muted: #f2f2fa;
+  --dx-text-soft: #c0c0c1;
+  --dx-surface: #434346;
+  --dx-surface-raised: #4a4a4d;
+  --dx-border: #68686a;
+}
+
 body {
   margin: 0;
-  color: #172033;
-  background: #f6f7f9;
+  color: var(--dx-page-text);
+  background: var(--dx-page-bg);
   font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.5;
 }
 
 a {
@@ -22,4 +54,14 @@ textarea {
 
 button {
   cursor: pointer;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--dx-gray-300);
+}
+
+::selection {
+  color: var(--dx-text);
+  background: var(--dx-primary-500);
 }

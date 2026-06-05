@@ -2,7 +2,7 @@ using EmployeeSchedule.Api.Modules.ScheduleModule.Dtos;
 
 namespace EmployeeSchedule.Api.Modules.ScheduleModule.Services.Contract;
 
-public interface IScheduleService
+public interface IScheduleService 
 {
     Task<List<ScheduleResponseDto>> GetAllAsync();
 

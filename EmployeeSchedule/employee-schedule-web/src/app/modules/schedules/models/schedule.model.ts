@@ -9,6 +9,7 @@ export const SCHEDULE_STATUS_OPTIONS: readonly ScheduleStatus[] = [
 
 export interface Schedule {
   id: number;
+  employeeId: number;
   employeeName: string;
   employeeRegistration: string;
   department: string;
@@ -23,9 +24,7 @@ export interface Schedule {
 }
 
 export interface CreateScheduleRequest {
-  employeeName: string;
-  employeeRegistration: string;
-  department: string;
+  employeeId: number;
   shiftName: string;
   startTime: string;
   endTime: string;

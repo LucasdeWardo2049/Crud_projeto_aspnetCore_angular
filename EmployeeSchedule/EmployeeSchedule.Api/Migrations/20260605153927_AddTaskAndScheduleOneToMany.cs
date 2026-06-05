@@ -1,0 +1,71 @@
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+
+#nullable disable
+
+namespace EmployeeSchedule.Api.Migrations
+{
+    /// <inheritdoc />
+    public partial class AddTaskAndScheduleOneToMany : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropIndex(
+                name: "IX_schedules_employee_id",
+                table: "schedules");
+
+            migrationBuilder.CreateTable(
+                name: "tasks",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    schedule_id = table.Column<int>(type: "integer", nullable: false),
+                    title = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    is_done = table.Column<bool>(type: "boolean", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    completed_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tasks", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_tasks_schedules_schedule_id",
+                        column: x => x.schedule_id,
+                        principalTable: "schedules",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_schedules_employee_id",
+                table: "schedules",
+                column: "employee_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_tasks_schedule_id",
+                table: "tasks",
+                column: "schedule_id");
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "tasks");
+
+            migrationBuilder.DropIndex(
+                name: "IX_schedules_employee_id",
+                table: "schedules");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_schedules_employee_id",
+                table: "schedules",
+                column: "employee_id",
+                unique: true);
+        }
+    }
+}

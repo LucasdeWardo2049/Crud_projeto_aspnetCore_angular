@@ -1,0 +1,61 @@
+<section class="dashboard-page">
+  <header class="page-header">
+    <div>
+      <h2>Dashboard</h2>
+    </div>
+  </header>
+
+  @if (loading) {
+    <div class="message">Carregando...</div>
+  }
+
+  @if (errorMessage) {
+    <div class="error">{{ errorMessage }}</div>
+  }
+
+  <div class="metric-grid">
+    <article>
+      <span>Escalas</span>
+      <strong>{{ totalSchedules }}</strong>
+    </article>
+
+    <article>
+      <span>Tasks</span>
+      <strong>{{ totalTasks }}</strong>
+    </article>
+  </div>
+
+  <div class="chart-grid">
+    <section class="chart-panel">
+      <h3>Escalas por status</h3>
+      <div #schedulesChart class="chart chart-half"></div>
+    </section>
+
+    <section class="chart-panel">
+      <h3>Tasks por departamento</h3>
+      <div #tasksChart class="chart"></div>
+    </section>
+  </div>
+
+  @if (selectedDepartment) {
+    <section class="drilldown-panel">
+      <header>
+        <div>
+          <span>Departamento</span>
+          <h3>{{ selectedDepartment }}</h3>
+        </div>
+
+        <button type="button" (click)="clearDepartmentSelection()">Limpar</button>
+      </header>
+
+      <div class="employee-task-list">
+        @for (employee of selectedDepartmentEmployees; track employee.employeeId) {
+          <article>
+            <strong>{{ employee.employeeName }}</strong>
+            <span>{{ employee.taskCount }} {{ employee.taskCount === 1 ? 'task' : 'tasks' }}</span>
+          </article>
+        }
+      </div>
+    </section>
+  }
+</section>
